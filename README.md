@@ -1,4 +1,4 @@
-# Appmeliapersonas Backend
+# Montgus Backend
 
 # Información Técnica
 
@@ -16,7 +16,7 @@
 Ingresar al directorio del proyecto, usar `npm install` para instalar las dependencias.
 
 ```
-$ cd monitoriapp-backend
+$ cd montgus-backend
 $ npm install
 
 ```
