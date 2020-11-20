@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+      activo: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
