@@ -27,6 +27,7 @@ router.post(
   passport.authenticate("local", { session: false }),
   authController.login
 );
+router.post("/signup", authController.signup);
 
 /**
  * API
