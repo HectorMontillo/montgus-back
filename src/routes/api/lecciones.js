@@ -34,6 +34,7 @@ async function createLeccion(req, res, next) {
       username: req.user.username,
       description: descripcion,
       image: savedName,
+      UserId: req.user.id,
     });
 
     return res.status(201).json({
@@ -46,6 +47,29 @@ async function createLeccion(req, res, next) {
   }
 }
 
+async function setContentLeccion(req, res, next) {
+  const slides = req.body.slides;
+  const leccionId = req.params.leccionId;
+  if (!slides) {
+    return next(notData());
+  }
+  try {
+    const [updated] = await models.Lecciones.update(
+      { content: slides, public: true },
+      { where: { id: leccionId, UserId: req.user.id } }
+    );
+    if (!updated) {
+      return next(newError("Un error inesperado guardando la lección"));
+    }
+    return res.status(201).json({
+      status: 201,
+      mensaje: "Leccion guarda satisfactoriamente",
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
 module.exports = {
   createLeccion,
+  setContentLeccion,
 };

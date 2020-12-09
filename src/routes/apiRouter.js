@@ -37,4 +37,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   apiController.lecciones.createLeccion
 );
+router.post(
+  "/lecciones/:leccionId",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.setContentLeccion
+);
 module.exports = router;
