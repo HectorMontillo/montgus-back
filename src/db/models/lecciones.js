@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      graduates: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
       content: {
         type: DataTypes.JSON,
       },

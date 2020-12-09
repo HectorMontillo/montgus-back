@@ -69,7 +69,21 @@ async function setContentLeccion(req, res, next) {
     return next(err);
   }
 }
+
+async function getLeccionesCreadas(req, res, next) {
+  try {
+    const lecciones = await models.Lecciones.findAll({
+      where: { UserId: req.user.id },
+    });
+
+    return res.status(201).json(lecciones);
+  } catch (err) {
+    return next(err);
+  }
+}
+
 module.exports = {
   createLeccion,
   setContentLeccion,
+  getLeccionesCreadas,
 };

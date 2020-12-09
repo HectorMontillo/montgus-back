@@ -34,7 +34,7 @@ async function signup(req, res, next) {
       gravatar: avatar,
       username,
     });
-    const token = jwt.sign({ userId: newUser.id }, process.env.JWTSECRET);
+    const token = jwt.sign({ UserId: newUser.id }, process.env.JWTSECRET);
     return res.status(201).json({ token, gravatar: newUser.gravatar });
   } catch (err) {
     return next(err);

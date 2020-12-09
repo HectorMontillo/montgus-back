@@ -32,6 +32,17 @@ router.post("/signup", authController.signup);
 /**
  * API
  */
+/**
+ * Usuarios
+ */
+router.get(
+  "/users",
+  passport.authenticate("jwt", { session: false }),
+  apiController.users.getUser
+);
+/**
+ * Lecciones
+ */
 router.post(
   "/lecciones",
   passport.authenticate("jwt", { session: false }),
@@ -41,5 +52,10 @@ router.post(
   "/lecciones/:leccionId",
   passport.authenticate("jwt", { session: false }),
   apiController.lecciones.setContentLeccion
+);
+router.get(
+  "/lecciones/creadas",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.getLeccionesCreadas
 );
 module.exports = router;
