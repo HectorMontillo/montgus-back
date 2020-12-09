@@ -9,7 +9,7 @@
     "sync": "NODE_ENV=development FORCE=0 node -r dotenv/config src/db/scripts/sync.js",
     "sync-force": "NODE_ENV=development FORCE=1 node -r dotenv/config src/db/scripts/sync.js",
     "seed": "NODE_ENV=development node -r dotenv/config src/db/seeders/seed.js",
-    "deploy": "pm2 stop Montgus-pruebas && DEBUG=Montgus-backend:* NODE_ENV=development PORT=3000 pm2 start 1 -n Montgus-pruebas"
+    "deploy": "pm2 stop Montgus-pruebas && DEBUG=Montgus-backend:* NODE_ENV=development PORT=3000 pm2 start 0 -n Montgus-pruebas"
   },
   "author": "Hector Steven Montillo Quiceno - hector.montillo@utp.edu.co",
   "license": "MIT",
