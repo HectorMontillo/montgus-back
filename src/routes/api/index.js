@@ -1,1 +1,5 @@
-module.exports = {};
+const lecciones = require("./lecciones");
+
+module.exports = {
+  lecciones,
+};

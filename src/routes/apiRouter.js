@@ -8,7 +8,7 @@ const passport = require("passport");
  */
 
 const authController = require("./auth");
-//const apiController = require("./api");
+const apiController = require("./api");
 /**
  * Index
  */
@@ -32,5 +32,9 @@ router.post("/signup", authController.signup);
 /**
  * API
  */
-
+router.post(
+  "/lecciones",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.createLeccion
+);
 module.exports = router;

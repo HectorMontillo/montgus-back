@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       image: {
         type: DataTypes.STRING,
       },
+      public: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       content: {
         type: DataTypes.JSON,
       },
