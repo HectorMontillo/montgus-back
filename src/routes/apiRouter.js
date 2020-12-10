@@ -58,4 +58,9 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   apiController.lecciones.getLeccionesCreadas
 );
+router.get(
+  "/lecciones/recomendadas",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.getLeccionesRecomendadas
+);
 module.exports = router;

@@ -3,6 +3,7 @@ const sha256 = require("sha256");
 const { notData, newError } = require("../../lib/newError");
 const models = require("../../db/models");
 const path = require("path");
+const { Op } = require("sequelize");
 
 async function createLeccion(req, res, next) {
   const { nombre, descripcion } = req.body;
@@ -82,8 +83,30 @@ async function getLeccionesCreadas(req, res, next) {
   }
 }
 
+async function getLeccionesRecomendadas(req, res, next) {
+  try {
+    const lecciones = await models.Lecciones.findAll({
+      where: {
+        public: true,
+        content: {
+          [Op.ne]: null,
+        },
+      },
+      order: [
+        // Will escape title and validate DESC against a list of valid direction parameters
+        ["score", "DESC"],
+      ],
+    });
+
+    return res.status(201).json(lecciones);
+  } catch (err) {
+    return next(err);
+  }
+}
+
 module.exports = {
   createLeccion,
   setContentLeccion,
   getLeccionesCreadas,
+  getLeccionesRecomendadas,
 };
