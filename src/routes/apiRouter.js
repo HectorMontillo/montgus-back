@@ -48,10 +48,25 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   apiController.lecciones.createLeccion
 );
-router.post(
+router.put(
   "/lecciones/:leccionId",
   passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.updateLeccion
+);
+router.delete(
+  "/lecciones/:leccionId",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.eliminarLeccion
+);
+router.post(
+  "/lecciones/content/:leccionId",
+  passport.authenticate("jwt", { session: false }),
   apiController.lecciones.setContentLeccion
+);
+router.get(
+  "/lecciones/content/:leccionId",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.getContentLeccion
 );
 router.get(
   "/lecciones/creadas",

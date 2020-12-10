@@ -18,9 +18,7 @@ async function createLeccion(req, res, next) {
       newError("La imagen de portada debe estar en formato png o jpg", 400)
     );
   }
-  /*
-  console.log("User: ", req.user.username);
-  console.log(req.body, req.files);*/
+
   try {
     let portada = req.files.portada;
 
@@ -71,6 +69,81 @@ async function setContentLeccion(req, res, next) {
   }
 }
 
+async function updateLeccion(req, res, next) {
+  const { nombre, descripcion } = req.body;
+  const { leccionId } = req.params;
+  const permitedMimes = ["image/jpeg", "image/png"];
+
+  if (!nombre || !descripcion) {
+    return next(notData());
+  }
+
+  if (req.files && !req.files.portada) {
+    return next(notData());
+  }
+
+  if (req.files && !permitedMimes.includes(req.files.portada.mimetype)) {
+    return next(
+      newError("La imagen de portada debe estar en formato png o jpg", 400)
+    );
+  }
+
+  try {
+    const data = {
+      titulo: nombre,
+      description: descripcion,
+    };
+    if (req.files) {
+      let portada = req.files.portada;
+
+      const sha256Hash = sha256(portada.data);
+
+      const savedName = sha256Hash;
+
+      portada.mv(path.join(process.env.PATH_UPLOADS, "portadas", savedName));
+
+      data.image = savedName;
+    }
+    await models.Lecciones.update(
+      {
+        ...data,
+      },
+      {
+        where: {
+          id: leccionId,
+        },
+      }
+    );
+
+    return res.status(201).json({
+      status: 201,
+      mensaje: "Lección actualizada satisfactoriamente",
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function getContentLeccion(req, res, next) {
+  const { leccionId } = req.params;
+  try {
+    const leccion = await models.Lecciones.findOne({
+      where: {
+        id: leccionId,
+        UserId: req.user.id,
+      },
+    });
+
+    if (!leccion) {
+      return next(newError("Lección no encontrada", 404));
+    }
+
+    return res.status(201).json(leccion);
+  } catch (err) {
+    return next(err);
+  }
+}
+
 async function getLeccionesCreadas(req, res, next) {
   try {
     const lecciones = await models.Lecciones.findAll({
@@ -104,9 +177,31 @@ async function getLeccionesRecomendadas(req, res, next) {
   }
 }
 
+async function eliminarLeccion(req, res, next) {
+  const { leccionId } = req.params;
+  try {
+    await models.Lecciones.destroy({
+      where: {
+        id: leccionId,
+        UserId: req.user.id,
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      mensaje: "Lección eliminada",
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 module.exports = {
   createLeccion,
   setContentLeccion,
+  getContentLeccion,
   getLeccionesCreadas,
   getLeccionesRecomendadas,
+  updateLeccion,
+  eliminarLeccion,
 };
