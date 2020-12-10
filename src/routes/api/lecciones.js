@@ -130,7 +130,6 @@ async function getContentLeccion(req, res, next) {
     const leccion = await models.Lecciones.findOne({
       where: {
         id: leccionId,
-        UserId: req.user.id,
       },
     });
 
