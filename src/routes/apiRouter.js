@@ -48,6 +48,16 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   apiController.lecciones.createLeccion
 );
+router.post(
+  "/lecciones/take/:leccionId",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.tomarLeccion
+);
+router.post(
+  "/lecciones/finish/:leccionId",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.terminarLeccion
+);
 router.put(
   "/lecciones/:leccionId",
   passport.authenticate("jwt", { session: false }),
@@ -77,5 +87,10 @@ router.get(
   "/lecciones/recomendadas",
   passport.authenticate("jwt", { session: false }),
   apiController.lecciones.getLeccionesRecomendadas
+);
+router.get(
+  "/lecciones/not_finished",
+  passport.authenticate("jwt", { session: false }),
+  apiController.lecciones.getLeccionesNoTerminadas
 );
 module.exports = router;

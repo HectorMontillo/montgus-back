@@ -196,6 +196,102 @@ async function eliminarLeccion(req, res, next) {
   }
 }
 
+async function tomarLeccion(req, res, next) {
+  const { leccionId } = req.params;
+  try {
+    await models.LeccionesTomadas.findOrCreate({
+      where: {
+        LeccioneId: leccionId,
+        UserId: req.user.id,
+      },
+      defaults: {
+        LeccioneId: leccionId,
+        UserId: req.user.id,
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      mensaje: "Lección iniciada",
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function terminarLeccion(req, res, next) {
+  const { leccionId } = req.params;
+  const { rating } = req.body;
+  try {
+    await models.LeccionesTomadas.update(
+      { finished: true },
+      {
+        where: {
+          LeccioneId: leccionId,
+          UserId: req.user.id,
+        },
+      }
+    );
+
+    const leccion = await models.Lecciones.findByPk(leccionId);
+
+    const updatedGraduates = leccion.graduates + 1;
+    const updatedRating =
+      leccion.rating === 0.0 ? rating : leccion.rating * 0.9 + rating * 0.1;
+    const updatedScore = (leccion.promotion + updatedRating) / 2;
+
+    console.log(
+      typeof leccion.graduates,
+      typeof leccion.rating,
+      typeof leccion.promotion
+    );
+
+    console.log(updatedGraduates, updatedRating, updatedScore);
+
+    await models.Lecciones.update(
+      {
+        graduates: updatedGraduates,
+        rating: updatedRating.toFixed(1),
+        score: updatedScore,
+      },
+      { where: { id: leccionId } }
+    );
+
+    return res.status(200).json({
+      status: 200,
+      mensaje: "Lección terminada",
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function getLeccionesNoTerminadas(req, res, next) {
+  try {
+    const leccionesTomadas = await models.LeccionesTomadas.findAll({
+      where: {
+        UserId: req.user.id,
+        finished: false,
+        LeccioneId: {
+          [Op.ne]: null,
+        },
+      },
+      include: {
+        model: models.Lecciones,
+        attributes: ["titulo", "id", "image"],
+      },
+    });
+
+    const response = leccionesTomadas.map((leccionTomada) => {
+      return leccionTomada.Leccione;
+    });
+
+    return res.status(201).json(response);
+  } catch (err) {
+    return next(err);
+  }
+}
+
 module.exports = {
   createLeccion,
   setContentLeccion,
@@ -204,4 +300,7 @@ module.exports = {
   getLeccionesRecomendadas,
   updateLeccion,
   eliminarLeccion,
+  tomarLeccion,
+  terminarLeccion,
+  getLeccionesNoTerminadas,
 };
